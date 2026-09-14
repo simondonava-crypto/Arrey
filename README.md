@@ -1,16 +1,22 @@
 # PawTrack
 
-A lightweight web app for tracking cats and dogs — status (available, fostered, adopted, lost, found), profile details, and a full history timeline per pet.
+A courier-style tracking website for pet transport — enter a tracking number to see a live map, delivery-style progress stages, and a full event history, the same way you'd track a package.
 
 ## Features
-- Add, edit, and remove pets
-- Track each pet's status over time with a timeline
-- Filter by species and status, search by name or breed
+- Tracking-number lookup with a FedEx/UPS-style results view
+- Stage tracker: Booked → Picked Up → In Transit → Out for Delivery → Delivered
+- Live map (Leaflet + OpenStreetMap) showing origin, destination, and current location
+- Detailed event log with timestamps and locations
 - Responsive layout, light/dark theme support
-- No build step, no backend — data is stored in the browser via `localStorage`
+
+## Demo tracking numbers
+- `PAW-48213967` — in transit
+- `PAW-77104582` — delivered
+- `PAW-90385271` — out for delivery
+- `PAW-15529043` — just booked
 
 ## Running locally
-Just open `index.html` in a browser, or serve the folder with any static file server:
+Open `index.html` directly, or serve the folder with any static file server:
 
 ```
 python -m http.server 8000
@@ -19,4 +25,4 @@ python -m http.server 8000
 Then visit `http://localhost:8000`.
 
 ## Tech
-Plain HTML, CSS, and JavaScript — no frameworks or external dependencies.
+Plain HTML, CSS, and JavaScript, plus [Leaflet](https://leafletjs.com/) for the map. No build step, no backend — shipment data is defined in `js/shipments.js`.
