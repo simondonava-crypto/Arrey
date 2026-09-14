@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawTrack — Cat &amp; Dog Tracker</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🐾</span>
+      <span class="brand-name">PawTrack</span>
+    </div>
+    <button id="addPetBtn" class="btn btn-primary">+ Add Pet</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="stats-bar" id="statsBar" aria-label="Summary statistics">
+    <!-- filled by JS -->
+  </section>
+
+  <section class="controls">
+    <div class="tabs" id="speciesTabs" role="tablist" aria-label="Filter by species">
+      <button class="tab active" data-species="all" role="tab" aria-selected="true">All</button>
+      <button class="tab" data-species="dog" role="tab" aria-selected="false">Dogs</button>
+      <button class="tab" data-species="cat" role="tab" aria-selected="false">Cats</button>
+    </div>
+
+    <div class="filters-right">
+      <select id="statusFilter" class="select">
+        <option value="all">All statuses</option>
+        <option value="Available">Available</option>
+        <option value="Fostered">Fostered</option>
+        <option value="Adopted">Adopted</option>
+        <option value="Lost">Lost</option>
+        <option value="Found">Found</option>
+      </select>
+      <input type="search" id="searchInput" class="search-input" placeholder="Search by name or breed…">
+    </div>
+  </section>
+
+  <section id="petGrid" class="pet-grid" aria-live="polite">
+    <!-- pet cards filled by JS -->
+  </section>
+
+  <p id="emptyState" class="empty-state" hidden>No pets match these filters.</p>
+
+</main>
+
+<!-- Pet detail / edit drawer -->
+<div id="overlay" class="overlay" hidden></div>
+
+<aside id="detailPanel" class="panel" hidden aria-label="Pet details">
+  <button class="panel-close" id="closeDetailBtn" aria-label="Close">✕</button>
+  <div id="detailContent"></div>
+</aside>
+
+<div id="formModal" class="modal" hidden>
+  <div class="modal-card">
+    <button class="panel-close" id="closeFormBtn" aria-label="Close">✕</button>
+    <h2 id="formTitle">Add a Pet</h2>
+    <form id="petForm">
+      <input type="hidden" id="petId">
+
+      <label class="field">
+        <span>Name</span>
+        <input type="text" id="petName" required maxlength="40">
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Species</span>
+          <select id="petSpecies" required>
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Status</span>
+          <select id="petStatus" required>
+            <option value="Available">Available</option>
+            <option value="Fostered">Fostered</option>
+            <option value="Adopted">Adopted</option>
+            <option value="Lost">Lost</option>
+            <option value="Found">Found</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Breed</span>
+          <input type="text" id="petBreed" maxlength="60">
+        </label>
+        <label class="field">
+          <span>Age</span>
+          <input type="text" id="petAge" placeholder="e.g. 2 years" maxlength="30">
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Photo</span>
+        <input type="file" id="petPhotoFile" accept="image/*">
+      </label>
+
+      <label class="field">
+        <span>Notes</span>
+        <textarea id="petNotes" rows="3" maxlength="500"></textarea>
+      </label>
+
+      <div class="form-actions">
+        <button type="button" id="deletePetBtn" class="btn btn-danger" hidden>Delete</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
