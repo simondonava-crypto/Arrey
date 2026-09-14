@@ -22,14 +22,60 @@
 </header>
 
 <section class="hero">
-  <div class="hero-inner">
-    <h1>Track your pet's journey, every step of the way.</h1>
-    <p>Enter a tracking number to see real-time status and location.</p>
-    <form id="trackForm" class="track-form">
-      <input type="text" id="trackingInput" placeholder="Enter tracking number, e.g. PAW-48213967" autocomplete="off">
-      <button type="submit" class="btn btn-primary">Track</button>
-    </form>
-    <p class="hero-hint">Try one of: <button type="button" class="chip" data-demo="PAW-48213967">PAW-48213967</button> <button type="button" class="chip" data-demo="PAW-77104582">PAW-77104582</button> <button type="button" class="chip" data-demo="PAW-90385271">PAW-90385271</button> <button type="button" class="chip" data-demo="PAW-15529043">PAW-15529043</button></p>
+  <div class="hero-inner hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">PET LOGISTICS, SIMPLIFIED</span>
+      <h1>Track your pet's journey, every step of the way.</h1>
+      <p>From pickup to delivery, know exactly where your pet is — in real time, on a live map.</p>
+      <form id="trackForm" class="track-form">
+        <input type="text" id="trackingInput" placeholder="Enter tracking number, e.g. PAW-48213967" autocomplete="off">
+        <button type="submit" class="btn btn-primary">Track</button>
+      </form>
+      <p class="hero-hint">Try one of: <button type="button" class="chip" data-demo="PAW-48213967">PAW-48213967</button> <button type="button" class="chip" data-demo="PAW-77104582">PAW-77104582</button> <button type="button" class="chip" data-demo="PAW-90385271">PAW-90385271</button> <button type="button" class="chip" data-demo="PAW-15529043">PAW-15529043</button></p>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 420 320" class="route-svg">
+        <circle cx="60" cy="250" r="9" class="route-pin route-pin-a"/>
+        <circle cx="360" cy="60" r="9" class="route-pin route-pin-b"/>
+        <path id="heroPath" d="M60,250 C 140,250 120,80 200,140 S 300,220 360,60" class="route-path"/>
+        <g class="route-mover">
+          <circle r="14" class="mover-disc"/>
+          <text y="5" text-anchor="middle" class="mover-icon">🐾</text>
+        </g>
+      </svg>
+      <div class="floating-card card-status">
+        <img src="assets/photos/ruby.jpg" alt="">
+        <div>
+          <div class="fc-name">Ruby</div>
+          <div class="fc-status">In Transit</div>
+        </div>
+      </div>
+      <div class="floating-card card-eta">
+        <div class="fc-eta-label">ETA</div>
+        <div class="fc-eta-value">Today, 4:30 PM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+    <div class="feature">
+      <div class="feature-icon">🗺️</div>
+      <h3>Live map tracking</h3>
+      <p>Follow your pet's exact route from pickup to drop-off on an interactive live map.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔔</div>
+      <h3>Milestone notifications</h3>
+      <p>Get a clear status update at every stage — booked, picked up, in transit, delivered.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🛡️</div>
+      <h3>Careful handling</h3>
+      <p>Every journey is logged with timestamps and locations, so nothing goes unaccounted for.</p>
+    </div>
   </div>
 </section>
 
