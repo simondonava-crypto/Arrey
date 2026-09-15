@@ -1,16 +1,6 @@
 (function () {
   "use strict";
 
-  function placeholderPhoto(species) {
-    const emoji = species === "cat" ? "🐱" : "🐶";
-    const bg = species === "cat" ? "#8fc4b0" : "#f2b56b";
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
-      <rect width="400" height="400" fill="${bg}"/>
-      <text x="50%" y="54%" font-size="180" text-anchor="middle" dominant-baseline="middle">${emoji}</text>
-    </svg>`;
-    return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
-  }
-
   function formatDateTime(iso) {
     const d = new Date(iso);
     return d.toLocaleString(undefined, {
@@ -60,7 +50,7 @@
 
     const originIcon = L.divIcon({ className: "map-pin map-pin-origin", html: "A", iconSize: [22, 22] });
     const destIcon = L.divIcon({ className: "map-pin map-pin-dest", html: "B", iconSize: [22, 22] });
-    const petIcon = L.divIcon({ className: "map-pin map-pin-pet", html: "🐾", iconSize: [28, 28] });
+    const petIcon = L.divIcon({ className: "map-pin-current", html: "<span class=\"pulse-dot\"></span>", iconSize: [18, 18] });
 
     L.marker(originLatLng, { icon: originIcon }).addTo(map).bindPopup(shipment.origin.name);
     L.marker(destLatLng, { icon: destIcon }).addTo(map).bindPopup(shipment.destination.name);
@@ -100,11 +90,11 @@
     notFound.hidden = true;
     resultView.hidden = false;
 
-    document.getElementById("petPhoto").src = shipment.photo || placeholderPhoto(shipment.species);
+    document.getElementById("petPhoto").src = shipment.photo;
     document.getElementById("petPhoto").alt = shipment.petName;
     document.getElementById("petName").textContent = shipment.petName;
     document.getElementById("petMeta").textContent =
-      (shipment.species === "cat" ? "🐱 " : "🐶 ") + shipment.breed;
+      (shipment.species === "cat" ? "Cat" : "Dog") + " · " + shipment.breed;
     document.getElementById("trackingNumberDisplay").textContent = trackingNumber.trim().toUpperCase();
     document.getElementById("originName").textContent = shipment.origin.name;
     document.getElementById("destName").textContent = shipment.destination.name;
@@ -132,4 +122,17 @@
       showShipment(chip.dataset.demo);
     });
   });
+
+  /* ---------- homepage carousel ---------- */
+
+  const carousel = document.getElementById("carousel");
+  if (carousel) {
+    const slides = carousel.querySelectorAll(".carousel-slide");
+    let activeSlide = 0;
+    setInterval(() => {
+      slides[activeSlide].classList.remove("active");
+      activeSlide = (activeSlide + 1) % slides.length;
+      slides[activeSlide].classList.add("active");
+    }, 5000);
+  }
 })();

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — PawTrack</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      <img class="brand-mark" src="assets/logo.svg" width="30" height="30" alt="">
+      <span class="brand-name">PawTrack</span>
+    </a>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Track a Pet</a>
+      <a href="about.html" class="nav-link">About Us</a>
+      <a href="contact.html" class="nav-link active">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-inner two-col">
+    <div class="page-hero-copy">
+      <span class="eyebrow">GET IN TOUCH</span>
+      <h1>We're happy to help.</h1>
+      <p>Questions about a shipment, a partnership inquiry, or just want to say hello — reach out and our team will get back to you.</p>
+
+      <form id="contactForm" class="contact-form">
+        <label class="field">
+          <span>Name</span>
+          <input type="text" required maxlength="60">
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" required maxlength="80">
+        </label>
+        <label class="field">
+          <span>Message</span>
+          <textarea rows="4" required maxlength="600"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">Send message</button>
+        <p id="contactSent" class="contact-sent" hidden>Thanks — your message has been sent. We'll be in touch soon.</p>
+      </form>
+
+      <div class="contact-info">
+        <div><strong>Email</strong><br>support@pawtrack.example</div>
+        <div><strong>Phone</strong><br>(555) 123-4567</div>
+        <div><strong>Hours</strong><br>Mon–Fri, 8am–6pm CT</div>
+      </div>
+    </div>
+    <img class="page-hero-photo" src="assets/photos/stock/child-with-dog.jpg" alt="A child hugging a puppy">
+  </div>
+</section>
+
+<footer class="site-footer">
+  <p>PawTrack — professional pet transport tracking.</p>
+</footer>
+
+<script>
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    document.getElementById("contactSent").hidden = false;
+    this.reset();
+  });
+</script>
+</body>
+</html>

@@ -86,7 +86,7 @@ const SHIPMENTS = {
     petName: "Max",
     species: "dog",
     breed: "Labrador mix",
-    photo: null,
+    photo: "assets/photos/stock/max-real.jpg",
     origin: CITIES.dallas,
     destination: CITIES.houston,
     currentStageIndex: 0, // Booked
@@ -96,6 +96,44 @@ const SHIPMENTS = {
     },
     events: [
       { date: "2026-09-14T09:15:00", location: "Dallas, TX", description: "Shipment booked and confirmed. Awaiting pickup." }
+    ]
+  },
+  "PAW-63820194": {
+    petName: "Luna",
+    species: "cat",
+    breed: "Domestic longhair",
+    photo: "assets/photos/stock/luna-real.jpg",
+    origin: CITIES.dallas,
+    destination: CITIES.austin,
+    currentStageIndex: 1, // Picked up
+    currentLocation: CITIES.dallas,
+    stageDates: {
+      "Booked": "2026-09-13T11:00:00",
+      "Picked Up": "2026-09-14T09:00:00"
+    },
+    events: [
+      { date: "2026-09-14T09:00:00", location: "Dallas, TX", description: "Picked up from origin facility." },
+      { date: "2026-09-13T11:00:00", location: "Dallas, TX", description: "Shipment booked and confirmed." }
+    ]
+  },
+  "PAW-29471058": {
+    petName: "Rocky",
+    species: "dog",
+    breed: "Boxer mix",
+    photo: "assets/photos/stock/rocky-real.jpg",
+    origin: CITIES.houston,
+    destination: CITIES.sanAntonio,
+    currentStageIndex: 2, // In transit
+    currentLocation: lerp(CITIES.houston, CITIES.sanAntonio, 0.35),
+    stageDates: {
+      "Booked": "2026-09-12T08:00:00",
+      "Picked Up": "2026-09-13T09:30:00",
+      "In Transit": "2026-09-14T11:00:00"
+    },
+    events: [
+      { date: "2026-09-14T11:00:00", location: "Near Columbus, TX", description: "In transit to destination facility." },
+      { date: "2026-09-13T09:30:00", location: "Houston, TX", description: "Picked up from origin facility." },
+      { date: "2026-09-12T08:00:00", location: "Houston, TX", description: "Shipment booked and confirmed." }
     ]
   }
 };

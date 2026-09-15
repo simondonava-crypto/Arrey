@@ -4,19 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PawTrack — Pet Transport Tracking</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <header class="site-header">
   <div class="header-inner">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">🐾</span>
+    <a href="index.html" class="brand">
+      <img class="brand-mark" src="assets/logo.svg" width="30" height="30" alt="">
       <span class="brand-name">PawTrack</span>
-    </div>
+    </a>
     <nav class="header-nav">
-      <span class="nav-link active">Track a Pet</span>
+      <a href="index.html" class="nav-link active">Track a Pet</a>
+      <a href="about.html" class="nav-link">About Us</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </nav>
   </div>
 </header>
@@ -31,19 +34,18 @@
         <input type="text" id="trackingInput" placeholder="Enter tracking number, e.g. PAW-48213967" autocomplete="off">
         <button type="submit" class="btn btn-primary">Track</button>
       </form>
-      <p class="hero-hint">Try one of: <button type="button" class="chip" data-demo="PAW-48213967">PAW-48213967</button> <button type="button" class="chip" data-demo="PAW-77104582">PAW-77104582</button> <button type="button" class="chip" data-demo="PAW-90385271">PAW-90385271</button> <button type="button" class="chip" data-demo="PAW-15529043">PAW-15529043</button></p>
+      <p class="hero-hint">Try one of:
+        <button type="button" class="chip" data-demo="PAW-48213967">PAW-48213967</button>
+        <button type="button" class="chip" data-demo="PAW-77104582">PAW-77104582</button>
+        <button type="button" class="chip" data-demo="PAW-90385271">PAW-90385271</button>
+        <button type="button" class="chip" data-demo="PAW-15529043">PAW-15529043</button>
+        <button type="button" class="chip" data-demo="PAW-63820194">PAW-63820194</button>
+        <button type="button" class="chip" data-demo="PAW-29471058">PAW-29471058</button>
+      </p>
     </div>
 
-    <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 420 320" class="route-svg">
-        <circle cx="60" cy="250" r="9" class="route-pin route-pin-a"/>
-        <circle cx="360" cy="60" r="9" class="route-pin route-pin-b"/>
-        <path id="heroPath" d="M60,250 C 140,250 120,80 200,140 S 300,220 360,60" class="route-path"/>
-        <g class="route-mover">
-          <circle r="14" class="mover-disc"/>
-          <text y="5" text-anchor="middle" class="mover-icon">🐾</text>
-        </g>
-      </svg>
+    <div class="hero-art">
+      <img class="hero-photo" src="assets/photos/stock/carrier-dog.jpg" alt="A pet being carefully transported in a carrier">
       <div class="floating-card card-status">
         <img src="assets/photos/ruby.jpg" alt="">
         <div>
@@ -62,19 +64,48 @@
 <section class="features">
   <div class="features-inner">
     <div class="feature">
-      <div class="feature-icon">🗺️</div>
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      </div>
       <h3>Live map tracking</h3>
       <p>Follow your pet's exact route from pickup to drop-off on an interactive live map.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">🔔</div>
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
       <h3>Milestone notifications</h3>
       <p>Get a clear status update at every stage — booked, picked up, in transit, delivered.</p>
     </div>
     <div class="feature">
-      <div class="feature-icon">🛡️</div>
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.25 3.4 9.74 8 11 4.6-1.26 8-5.75 8-11V5l-8-3z"/><polyline points="9 12 11 14 15 10"/></svg>
+      </div>
       <h3>Careful handling</h3>
       <p>Every journey is logged with timestamps and locations, so nothing goes unaccounted for.</p>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="story-inner">
+    <img class="story-photo" src="assets/photos/stock/kennel-dog.jpg" alt="A dog waiting in a shelter kennel">
+    <div class="story-copy">
+      <span class="eyebrow eyebrow-dark">WHY IT MATTERS</span>
+      <h2>Every pet deserves a smooth, well-documented journey.</h2>
+      <p>Too many animals spend anxious hours — or days — with no one able to tell their owners where they are. PawTrack exists so that never has to happen: every pickup, transfer, and drop-off is logged and visible in real time, from the shelter to their new home.</p>
+    </div>
+  </div>
+</section>
+
+<section class="gallery">
+  <div class="gallery-inner">
+    <span class="eyebrow eyebrow-dark">MOMENTS WE HELP CREATE</span>
+    <h2>From pickup to a happy home.</h2>
+    <div class="carousel" id="carousel">
+      <img src="assets/photos/stock/delivered-crate.jpg" alt="A dog greeting its owner beside an open travel crate at home" class="carousel-slide active">
+      <img src="assets/photos/stock/child-with-dog.jpg" alt="A child hugging a puppy" class="carousel-slide">
+      <img src="assets/photos/stock/family-with-cat.jpg" alt="A mother and daughter with their cat by the fireplace" class="carousel-slide">
     </div>
   </div>
 </section>
@@ -134,7 +165,7 @@
   <p>PawTrack — professional pet transport tracking.</p>
 </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="vendor/leaflet/leaflet.js"></script>
 <script src="js/shipments.js"></script>
 <script src="js/app.js"></script>
 </body>
