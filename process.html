@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — PawTrack</title>
+<title>How It Works — PawTrack</title>
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -18,10 +18,10 @@
     <nav class="header-nav">
       <a href="index.html" class="nav-link">Track a Pet</a>
       <a href="service.html" class="nav-link">Services</a>
-      <a href="process.html" class="nav-link">How It Works</a>
+      <a href="process.html" class="nav-link active">How It Works</a>
       <a href="reviews.html" class="nav-link">Reviews</a>
       <a href="about.html" class="nav-link">About Us</a>
-      <a href="contact.html" class="nav-link active">Contact</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </nav>
   </div>
 </header>
@@ -29,34 +29,57 @@
 <section class="page-hero">
   <div class="page-hero-inner two-col">
     <div class="page-hero-copy">
-      <span class="eyebrow">GET IN TOUCH</span>
-      <h1>We're happy to help.</h1>
-      <p>Questions about a shipment, a partnership inquiry, or just want to say hello — reach out and our team will get back to you.</p>
+      <span class="eyebrow">HOW IT WORKS</span>
+      <h1>A structured process, from booking to a happy home.</h1>
+      <p>We follow the same five stages for every pet, every time — so nothing gets missed and everyone involved knows exactly what happens next.</p>
+    </div>
+    <img class="page-hero-photo" src="assets/photos/stock/van-transport.jpg" alt="A dog looking out of a transport van window">
+  </div>
+</section>
 
-      <form id="contactForm" class="contact-form">
-        <label class="field">
-          <span>Name</span>
-          <input type="text" required maxlength="60">
-        </label>
-        <label class="field">
-          <span>Email</span>
-          <input type="email" required maxlength="80">
-        </label>
-        <label class="field">
-          <span>Message</span>
-          <textarea rows="4" required maxlength="600"></textarea>
-        </label>
-        <button type="submit" class="btn btn-primary">Send message</button>
-        <p id="contactSent" class="contact-sent" hidden>Thanks — your message has been sent. We'll be in touch soon.</p>
-      </form>
+<section class="process-section">
+  <div class="process-inner">
 
-      <div class="contact-info">
-        <div><strong>Email</strong><br>support@pawtrack.example</div>
-        <div><strong>Phone</strong><br>(555) 123-4567</div>
-        <div><strong>Hours</strong><br>Mon–Fri, 8am–6pm CT</div>
+    <div class="process-step">
+      <div class="process-num">1</div>
+      <div class="process-body">
+        <h3>Booking &amp; Registration</h3>
+        <p>The journey starts with the essentials: pet details, pickup and destination locations, timing, and contact information. You get a confirmation with a booking reference right away.</p>
       </div>
     </div>
-    <img class="page-hero-photo" src="assets/photos/stock/child-with-dog.jpg" alt="A child hugging a puppy">
+
+    <div class="process-step">
+      <div class="process-num">2</div>
+      <div class="process-body">
+        <h3>Travel Requirements Review</h3>
+        <p>Before anything is scheduled, we check vaccination records, health certificates, crate suitability, and identification, so there's nothing left to catch us by surprise on pickup day.</p>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-num">3</div>
+      <div class="process-body">
+        <h3>Transport Planning &amp; Scheduling</h3>
+        <p>We confirm whether the trip is by air or by ground, coordinate the arrangements, and share an estimated timeframe so you know roughly when to expect updates.</p>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-num">4</div>
+      <div class="process-body">
+        <h3>Transport &amp; Monitoring</h3>
+        <p>While your pet is in transit, every milestone — pickup, transfers, stops along the route — is logged, so the tracking page always reflects where things actually stand.</p>
+      </div>
+    </div>
+
+    <div class="process-step">
+      <div class="process-num">5</div>
+      <div class="process-body">
+        <h3>Arrival &amp; Delivery</h3>
+        <p>Once your pet reaches its destination and delivery is complete, the booking status is updated to Delivered — closing the loop on the journey.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -73,6 +96,9 @@
       <div class="footer-links">
         <h4>Site</h4>
         <a href="index.html">Track a Pet</a>
+        <a href="service.html">Services</a>
+        <a href="process.html">How It Works</a>
+        <a href="reviews.html">Reviews</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact</a>
       </div>
@@ -101,12 +127,5 @@
 </footer>
 
 <script src="js/site.js"></script>
-<script>
-  document.getElementById("contactForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    document.getElementById("contactSent").hidden = false;
-    this.reset();
-  });
-</script>
 </body>
 </html>
