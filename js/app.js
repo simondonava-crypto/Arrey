@@ -80,8 +80,17 @@
     `).join("");
   }
 
+  function getAdminShipments() {
+    try {
+      return JSON.parse(localStorage.getItem("pawtrack.adminShipments") || "{}");
+    } catch (e) {
+      return {};
+    }
+  }
+
   function showShipment(trackingNumber) {
-    const shipment = SHIPMENTS[trackingNumber.trim().toUpperCase()];
+    const key = trackingNumber.trim().toUpperCase();
+    const shipment = SHIPMENTS[key] || getAdminShipments()[key];
     if (!shipment) {
       resultView.hidden = true;
       notFound.hidden = false;
@@ -122,6 +131,12 @@
       showShipment(chip.dataset.demo);
     });
   });
+
+  const preloadTracking = new URLSearchParams(window.location.search).get("track");
+  if (preloadTracking) {
+    trackingInput.value = preloadTracking;
+    showShipment(preloadTracking);
+  }
 
   /* ---------- homepage carousel ---------- */
 
