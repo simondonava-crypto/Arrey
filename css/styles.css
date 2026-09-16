@@ -190,6 +190,9 @@ body {
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: var(--accent-hover); }
 
+.btn-neutral { background: var(--border); color: var(--text); }
+.btn-neutral:hover { background: var(--text-muted); color: #fff; }
+
 .hero-hint { margin-top: 18px; font-size: 0.85rem; color: rgba(255,255,255,0.8); }
 .chip {
   background: rgba(255,255,255,0.12);
@@ -483,6 +486,10 @@ body {
 
 .admin-subheading { margin: 36px 0 14px; font-size: 1.05rem; }
 
+.form-section-heading { margin: 24px 0 4px; font-size: 1rem; border-top: 1px solid var(--border); padding-top: 20px; }
+.form-section-note { margin: 0 0 14px; color: var(--text-muted); font-size: 0.8rem; }
+
+.admin-row-wrap { max-width: 720px; margin-bottom: 10px; }
 .admin-row {
   display: flex;
   align-items: center;
@@ -491,9 +498,19 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px 16px;
-  margin-bottom: 10px;
-  max-width: 720px;
   flex-wrap: wrap;
+}
+.admin-row-details {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 12px 16px;
+  margin-top: -1px;
+  font-size: 0.86rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 16px;
 }
 .admin-row img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
 .admin-row-info { flex: 1; min-width: 160px; }

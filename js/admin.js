@@ -118,8 +118,21 @@
     const notes = document.getElementById("newNotes").value.trim();
     const photoFile = document.getElementById("newPhoto").files[0];
 
+    const receiver = {
+      name: document.getElementById("receiverName").value.trim(),
+      address: document.getElementById("receiverAddress").value.trim(),
+      country: document.getElementById("receiverCountry").value.trim(),
+      phone: document.getElementById("receiverPhone").value.trim(),
+      email: document.getElementById("receiverEmail").value.trim()
+    };
+
     if (!petName || originName === destName) {
       alert("Please fill in the pet's name, and choose two different cities for origin and destination.");
+      return;
+    }
+
+    if (!receiver.name || !receiver.address || !receiver.country || !receiver.phone || !receiver.email) {
+      alert("Please fill in all of the receiver's information.");
       return;
     }
 
@@ -147,7 +160,8 @@
       stageDates: { "Booked": now },
       events: [
         { date: now, location: originName, description: notes || "Shipment booked and confirmed." }
-      ]
+      ],
+      receiver
     };
 
     const shipments = getAdminShipments();
@@ -183,17 +197,28 @@
       const status = STAGE_ORDER[s.currentStageIndex];
       const canAdvance = s.currentStageIndex < STAGE_ORDER.length - 1;
       return `
-        <div class="admin-row">
-          <img src="${s.photo}" alt="">
-          <div class="admin-row-info">
-            <div class="admin-row-name">${escapeHtml(s.petName)} <span class="admin-row-tn">${trackingNumber}</span></div>
-            <div class="admin-row-meta">${escapeHtml(s.origin.name)} &rarr; ${escapeHtml(s.destination.name)}</div>
+        <div class="admin-row-wrap">
+          <div class="admin-row">
+            <img src="${s.photo}" alt="">
+            <div class="admin-row-info">
+              <div class="admin-row-name">${escapeHtml(s.petName)} <span class="admin-row-tn">${trackingNumber}</span></div>
+              <div class="admin-row-meta">${escapeHtml(s.origin.name)} &rarr; ${escapeHtml(s.destination.name)}${s.receiver ? " · to " + escapeHtml(s.receiver.name) : ""}</div>
+            </div>
+            <span class="status-pill status-${status.replace(/\s+/g, "-")}">${status}</span>
+            <div class="admin-row-actions">
+              ${s.receiver ? `<button class="btn btn-neutral btn-small" data-details="${trackingNumber}">Details</button>` : ""}
+              ${canAdvance ? `<button class="btn btn-primary btn-small" data-advance="${trackingNumber}">Advance</button>` : ""}
+              <button class="btn btn-danger btn-small" data-delete="${trackingNumber}">Delete</button>
+            </div>
           </div>
-          <span class="status-pill status-${status.replace(/\s+/g, "-")}">${status}</span>
-          <div class="admin-row-actions">
-            ${canAdvance ? `<button class="btn btn-primary btn-small" data-advance="${trackingNumber}">Advance</button>` : ""}
-            <button class="btn btn-danger btn-small" data-delete="${trackingNumber}">Delete</button>
-          </div>
+          ${s.receiver ? `
+          <div class="admin-row-details" id="details-${trackingNumber}" hidden>
+            <div><strong>Receiver:</strong> ${escapeHtml(s.receiver.name)}</div>
+            <div><strong>Address:</strong> ${escapeHtml(s.receiver.address)}</div>
+            <div><strong>Country:</strong> ${escapeHtml(s.receiver.country)}</div>
+            <div><strong>Phone:</strong> ${escapeHtml(s.receiver.phone)}</div>
+            <div><strong>Email:</strong> ${escapeHtml(s.receiver.email)}</div>
+          </div>` : ""}
         </div>
       `;
     }).join("");
@@ -208,7 +233,13 @@
   document.getElementById("shipmentList").addEventListener("click", (e) => {
     const advanceTN = e.target.getAttribute("data-advance");
     const deleteTN = e.target.getAttribute("data-delete");
+    const detailsTN = e.target.getAttribute("data-details");
     const shipments = getAdminShipments();
+
+    if (detailsTN) {
+      const panel = document.getElementById("details-" + detailsTN);
+      if (panel) panel.hidden = !panel.hidden;
+    }
 
     if (advanceTN && shipments[advanceTN]) {
       const s = shipments[advanceTN];
