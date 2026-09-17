@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Pet — PawTrack</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      <img class="brand-mark" src="assets/logo.svg" width="30" height="30" alt="">
+      <span class="brand-name">PawTrack</span>
+    </a>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="track.html" class="nav-link active">Track Your Pet</a>
+      <a href="service.html" class="nav-link">Services</a>
+      <a href="crate.html" class="nav-link">Crates</a>
+      <a href="process.html" class="nav-link">How It Works</a>
+      <a href="reviews.html" class="nav-link">Reviews</a>
+      <a href="policies.html" class="nav-link">Policies</a>
+      <a href="about.html" class="nav-link">About Us</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="track-hero">
+  <div class="track-hero-inner">
+    <span class="eyebrow">TRACK YOUR PET</span>
+    <h1>Track your pet's journey — status updates &amp; requirements.</h1>
+    <p>Enter your tracking number to view booking status, travel schedule, and important requirements checks. Support available 24/7.</p>
+    <form id="trackForm" class="track-form">
+      <input type="text" id="trackingInput" placeholder="Enter tracking number, e.g. PAW-48213967" autocomplete="off">
+      <button type="submit" class="btn btn-primary">Track</button>
+    </form>
+    <p class="hero-hint">Try one of:
+      <button type="button" class="chip" data-demo="PAW-48213967">PAW-48213967</button>
+      <button type="button" class="chip" data-demo="PAW-77104582">PAW-77104582</button>
+      <button type="button" class="chip" data-demo="PAW-90385271">PAW-90385271</button>
+      <button type="button" class="chip" data-demo="PAW-15529043">PAW-15529043</button>
+      <button type="button" class="chip" data-demo="PAW-63820194">PAW-63820194</button>
+      <button type="button" class="chip" data-demo="PAW-29471058">PAW-29471058</button>
+    </p>
+  </div>
+</section>
+
+<section class="info-callouts">
+  <div class="info-callouts-inner">
+    <div class="info-callout">
+      <h3>What you'll see</h3>
+      <p>Once you track a shipment, you'll get the current status, a timeline of every stage, and a live map showing roughly where your pet is right now.</p>
+    </div>
+    <div class="info-callout">
+      <h3>Privacy</h3>
+      <p>We show city and stage-level updates only. Exact street addresses are never displayed on the tracking page.</p>
+    </div>
+    <div class="info-callout">
+      <h3>Need help?</h3>
+      <p>Contact our support team with your tracking number and your pet's name, and we'll look into it right away.</p>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <div id="notFound" class="not-found" hidden>
+    <p>We couldn't find a shipment with that tracking number. Please double-check and try again.</p>
+  </div>
+
+  <section id="resultView" class="result-view" hidden>
+
+    <div class="summary-card">
+      <img id="petPhoto" class="summary-photo" alt="">
+      <div class="summary-info">
+        <div class="summary-top">
+          <div>
+            <h2 id="petName"></h2>
+            <div class="summary-meta" id="petMeta"></div>
+          </div>
+          <span id="statusPill" class="status-pill"></span>
+        </div>
+        <div class="route-line">
+          <div class="route-point">
+            <div class="route-label">From</div>
+            <div class="route-place" id="originName"></div>
+          </div>
+          <div class="route-arrow" aria-hidden="true">→</div>
+          <div class="route-point">
+            <div class="route-label">To</div>
+            <div class="route-place" id="destName"></div>
+          </div>
+        </div>
+        <div class="tracking-number">Tracking # <strong id="trackingNumberDisplay"></strong></div>
+      </div>
+    </div>
+
+    <section class="stage-tracker" id="stageTracker" aria-label="Shipment progress">
+      <!-- filled by JS -->
+    </section>
+
+    <div class="map-and-log">
+      <div class="map-card">
+        <div id="map"></div>
+      </div>
+      <div class="log-card">
+        <h3>Tracking history</h3>
+        <ul id="eventLog" class="event-log"></ul>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <img class="brand-mark" src="assets/logo.svg" width="28" height="28" alt="">
+          <span class="brand-name">PawTrack</span>
+        </a>
+        <p>Real-time tracking for pets on the move — from pickup to a happy home.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Site</h4>
+        <a href="index.html">Home</a>
+        <a href="track.html">Track Your Pet</a>
+        <a href="service.html">Services</a>
+        <a href="crate.html">Crates</a>
+        <a href="process.html">How It Works</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="policies.html">Policies</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-network">
+        <h4>Delivery Network</h4>
+        <div class="network-icons">
+          <div class="network-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="9"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="6" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>
+            <span>Ground</span>
+          </div>
+          <div class="network-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span>Air</span>
+          </div>
+          <div class="network-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a2 2 0 0 1-1 1.7l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8"/><path d="M3 8l9 5 9-5"/><path d="M12 13v9"/><path d="M3 8l9-5 9 5"/></svg>
+            <span>Express</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span class="js-year"></span> PawTrack. All rights reserved. · <a href="admin.html" class="staff-link">Staff Login</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="js/shipments.js"></script>
+<script src="js/app.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

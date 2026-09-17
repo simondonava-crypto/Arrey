@@ -141,17 +141,4 @@
     trackingInput.value = preloadTracking;
     showShipment(preloadTracking);
   }
-
-  /* ---------- homepage carousel ---------- */
-
-  const carousel = document.getElementById("carousel");
-  if (carousel) {
-    const slides = carousel.querySelectorAll(".carousel-slide");
-    let activeSlide = 0;
-    setInterval(() => {
-      slides[activeSlide].classList.remove("active");
-      activeSlide = (activeSlide + 1) % slides.length;
-      slides[activeSlide].classList.add("active");
-    }, 5000);
-  }
 })();

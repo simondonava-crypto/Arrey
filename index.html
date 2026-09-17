@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PawTrack — Pet Transport Tracking</title>
 <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
-<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -17,11 +16,13 @@
       <span class="brand-name">PawTrack</span>
     </a>
     <nav class="header-nav">
-      <a href="index.html" class="nav-link active">Track a Pet</a>
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="track.html" class="nav-link">Track Your Pet</a>
       <a href="service.html" class="nav-link">Services</a>
       <a href="crate.html" class="nav-link">Crates</a>
       <a href="process.html" class="nav-link">How It Works</a>
       <a href="reviews.html" class="nav-link">Reviews</a>
+      <a href="policies.html" class="nav-link">Policies</a>
       <a href="about.html" class="nav-link">About Us</a>
       <a href="contact.html" class="nav-link">Contact</a>
     </nav>
@@ -34,51 +35,23 @@
   <div class="hero-inner">
     <div class="hero-copy">
       <span class="eyebrow">PET LOGISTICS, SIMPLIFIED</span>
-      <h1>Track your pet's journey, every step of the way.</h1>
-      <p>From pickup to delivery, know exactly where your pet is — in real time, on a live map.</p>
-      <form id="trackForm" class="track-form">
-        <input type="text" id="trackingInput" placeholder="Enter tracking number, e.g. PAW-48213967" autocomplete="off">
-        <button type="submit" class="btn btn-primary">Track</button>
-      </form>
-      <p class="hero-hint">Try one of:
-        <button type="button" class="chip" data-demo="PAW-48213967">PAW-48213967</button>
-        <button type="button" class="chip" data-demo="PAW-77104582">PAW-77104582</button>
-        <button type="button" class="chip" data-demo="PAW-90385271">PAW-90385271</button>
-        <button type="button" class="chip" data-demo="PAW-15529043">PAW-15529043</button>
-        <button type="button" class="chip" data-demo="PAW-63820194">PAW-63820194</button>
-        <button type="button" class="chip" data-demo="PAW-29471058">PAW-29471058</button>
-      </p>
-    </div>
-
-    <div class="hero-floats">
-      <div class="floating-card card-status">
-        <img src="assets/photos/ruby.jpg" alt="">
-        <div>
-          <div class="fc-name">Ruby</div>
-          <div class="fc-status">In Transit</div>
-        </div>
-      </div>
-      <div class="floating-card card-eta">
-        <div class="fc-eta-label">ETA</div>
-        <div class="fc-eta-value">Today, 4:30 PM</div>
-      </div>
+      <h1>Safe, reliable pet transportation you can trust.</h1>
+      <p>PawTrack specializes in the safe and comfortable transportation of pets, from booking to delivery — with real-time tracking every step of the way.</p>
+      <a href="track.html" class="btn btn-primary btn-large">Track Your Pet</a>
     </div>
   </div>
-</section>
 
-<section class="info-callouts">
-  <div class="info-callouts-inner">
-    <div class="info-callout">
-      <h3>What you'll see</h3>
-      <p>Once you track a shipment, you'll get the current status, a timeline of every stage, and a live map showing roughly where your pet is right now.</p>
+  <div class="hero-floats">
+    <div class="floating-card card-status">
+      <img src="assets/photos/ruby.jpg" alt="">
+      <div>
+        <div class="fc-name">Ruby</div>
+        <div class="fc-status">In Transit</div>
+      </div>
     </div>
-    <div class="info-callout">
-      <h3>Privacy</h3>
-      <p>We show city and stage-level updates only. Exact street addresses are never displayed on the tracking page.</p>
-    </div>
-    <div class="info-callout">
-      <h3>Need help?</h3>
-      <p>Contact our support team with your tracking number and your pet's name, and we'll look into it right away.</p>
+    <div class="floating-card card-eta">
+      <div class="fc-eta-label">ETA</div>
+      <div class="fc-eta-value">Today, 4:30 PM</div>
     </div>
   </div>
 </section>
@@ -132,57 +105,6 @@
   </div>
 </section>
 
-<main class="container">
-
-  <div id="notFound" class="not-found" hidden>
-    <p>We couldn't find a shipment with that tracking number. Please double-check and try again.</p>
-  </div>
-
-  <section id="resultView" class="result-view" hidden>
-
-    <div class="summary-card">
-      <img id="petPhoto" class="summary-photo" alt="">
-      <div class="summary-info">
-        <div class="summary-top">
-          <div>
-            <h2 id="petName"></h2>
-            <div class="summary-meta" id="petMeta"></div>
-          </div>
-          <span id="statusPill" class="status-pill"></span>
-        </div>
-        <div class="route-line">
-          <div class="route-point">
-            <div class="route-label">From</div>
-            <div class="route-place" id="originName"></div>
-          </div>
-          <div class="route-arrow" aria-hidden="true">→</div>
-          <div class="route-point">
-            <div class="route-label">To</div>
-            <div class="route-place" id="destName"></div>
-          </div>
-        </div>
-        <div class="tracking-number">Tracking # <strong id="trackingNumberDisplay"></strong></div>
-      </div>
-    </div>
-
-    <section class="stage-tracker" id="stageTracker" aria-label="Shipment progress">
-      <!-- filled by JS -->
-    </section>
-
-    <div class="map-and-log">
-      <div class="map-card">
-        <div id="map"></div>
-      </div>
-      <div class="log-card">
-        <h3>Tracking history</h3>
-        <ul id="eventLog" class="event-log"></ul>
-      </div>
-    </div>
-
-  </section>
-
-</main>
-
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-top">
@@ -195,11 +117,13 @@
       </div>
       <div class="footer-links">
         <h4>Site</h4>
-        <a href="index.html">Track a Pet</a>
+        <a href="index.html">Home</a>
+        <a href="track.html">Track Your Pet</a>
         <a href="service.html">Services</a>
         <a href="crate.html">Crates</a>
         <a href="process.html">How It Works</a>
         <a href="reviews.html">Reviews</a>
+        <a href="policies.html">Policies</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact</a>
       </div>
@@ -227,9 +151,7 @@
   </div>
 </footer>
 
-<script src="vendor/leaflet/leaflet.js"></script>
-<script src="js/shipments.js"></script>
-<script src="js/app.js"></script>
 <script src="js/site.js"></script>
+<script src="js/gallery.js"></script>
 </body>
 </html>

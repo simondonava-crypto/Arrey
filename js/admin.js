@@ -161,7 +161,7 @@
     createForm.reset();
     resultPanel.hidden = false;
     document.getElementById("resultTrackingNumber").textContent = trackingNumber;
-    document.getElementById("resultTrackLink").href = "index.html?track=" + encodeURIComponent(trackingNumber);
+    document.getElementById("resultTrackLink").href = "track.html?track=" + encodeURIComponent(trackingNumber);
     resultPanel.scrollIntoView({ behavior: "smooth", block: "center" });
 
     renderShipmentList();
