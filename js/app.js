@@ -99,8 +99,12 @@
     notFound.hidden = true;
     resultView.hidden = false;
 
-    document.getElementById("petPhoto").src = shipment.photo;
-    document.getElementById("petPhoto").alt = shipment.petName;
+    const petPhotoEl = document.getElementById("petPhoto");
+    petPhotoEl.hidden = !shipment.photo;
+    if (shipment.photo) {
+      petPhotoEl.src = shipment.photo;
+      petPhotoEl.alt = shipment.petName;
+    }
     document.getElementById("petName").textContent = shipment.petName;
     document.getElementById("petMeta").textContent =
       (shipment.species === "cat" ? "Cat" : "Dog") + " · " + shipment.breed;

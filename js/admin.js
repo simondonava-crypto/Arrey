@@ -93,16 +93,6 @@
     });
   }
 
-  function placeholderPhoto(species) {
-    const emoji = species === "cat" ? "Cat" : "Dog";
-    const bg = species === "cat" ? "#8fc4b0" : "#f2b56b";
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
-      <rect width="400" height="400" fill="${bg}"/>
-      <text x="50%" y="52%" font-size="42" font-family="sans-serif" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">${emoji}</text>
-    </svg>`;
-    return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
-  }
-
   const createForm = document.getElementById("createShipmentForm");
   const resultPanel = document.getElementById("createResult");
 
@@ -145,7 +135,7 @@
 
     const trackingNumber = generateTrackingNumber();
     const now = todayIso();
-    const photo = photoFile ? await readFileAsDataUrl(photoFile) : placeholderPhoto(species);
+    const photo = photoFile ? await readFileAsDataUrl(photoFile) : null;
 
     const shipment = {
       petName,
@@ -199,7 +189,7 @@
       return `
         <div class="admin-row-wrap">
           <div class="admin-row">
-            <img src="${s.photo}" alt="">
+            ${s.photo ? `<img src="${s.photo}" alt="">` : `<div class="admin-row-noimg"></div>`}
             <div class="admin-row-info">
               <div class="admin-row-name">${escapeHtml(s.petName)} <span class="admin-row-tn">${trackingNumber}</span></div>
               <div class="admin-row-meta">${escapeHtml(s.origin.name)} &rarr; ${escapeHtml(s.destination.name)}${s.receiver ? " · to " + escapeHtml(s.receiver.name) : ""}</div>
