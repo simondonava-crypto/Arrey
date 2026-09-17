@@ -211,19 +211,6 @@ body {
 .btn-neutral { background: var(--border); color: var(--text); }
 .btn-neutral:hover { background: var(--text-muted); color: #fff; }
 
-.hero-hint { margin-top: 18px; font-size: 0.85rem; color: rgba(255,255,255,0.8); }
-.chip {
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.35);
-  color: #fff;
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  margin: 2px;
-}
-.chip:hover { background: rgba(255,255,255,0.22); }
-
 .container {
   max-width: 1100px;
   margin: 40px auto 60px;

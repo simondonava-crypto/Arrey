@@ -126,14 +126,9 @@
 
   trackForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (trackingInput.value.trim()) showShipment(trackingInput.value);
-  });
-
-  document.querySelectorAll(".chip[data-demo]").forEach(chip => {
-    chip.addEventListener("click", () => {
-      trackingInput.value = chip.dataset.demo;
-      showShipment(chip.dataset.demo);
-    });
+    const value = trackingInput.value.trim();
+    if (!value) return;
+    window.location.href = "track.html?track=" + encodeURIComponent(value.toUpperCase());
   });
 
   const preloadTracking = new URLSearchParams(window.location.search).get("track");
