@@ -93,6 +93,15 @@
     });
   }
 
+  async function geocodeCity(name) {
+    const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(name);
+    const res = await fetch(url, { headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error("Geocoding request failed");
+    const results = await res.json();
+    if (!results.length) return null;
+    return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+  }
+
   const createForm = document.getElementById("createShipmentForm");
   const resultPanel = document.getElementById("createResult");
 
@@ -103,8 +112,8 @@
     const species = document.getElementById("newSpecies").value;
     const breed = document.getElementById("newBreed").value.trim();
     const age = document.getElementById("newAge").value.trim();
-    const originName = document.getElementById("newOrigin").value;
-    const destName = document.getElementById("newDestination").value;
+    const originName = document.getElementById("newOrigin").value.trim();
+    const destName = document.getElementById("newDestination").value.trim();
     const notes = document.getElementById("newNotes").value.trim();
     const photoFile = document.getElementById("newPhoto").files[0];
 
@@ -116,8 +125,8 @@
       email: document.getElementById("receiverEmail").value.trim()
     };
 
-    if (!petName || originName === destName) {
-      alert("Please fill in the pet's name, and choose two different cities for origin and destination.");
+    if (!petName || !originName || !destName || originName.toLowerCase() === destName.toLowerCase()) {
+      alert("Please fill in the pet's name, and enter two different cities for origin and destination.");
       return;
     }
 
@@ -126,12 +135,30 @@
       return;
     }
 
-    const cityCoords = {
-      "San Antonio, TX": { lat: 29.4241, lng: -98.4936 },
-      "Dallas, TX": { lat: 32.7767, lng: -96.7970 },
-      "Houston, TX": { lat: 29.7604, lng: -95.3698 },
-      "Austin, TX": { lat: 30.2672, lng: -97.7431 }
-    };
+    const submitBtn = createForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Looking up cities...";
+
+    let originCoords, destCoords;
+    try {
+      [originCoords, destCoords] = await Promise.all([geocodeCity(originName), geocodeCity(destName)]);
+    } catch (err) {
+      alert("Couldn't reach the map lookup service. Please check your connection and try again.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      return;
+    }
+
+    if (!originCoords || !destCoords) {
+      alert("Couldn't find one of those cities on the map. Try being more specific, e.g. \"Houston, TX\" or \"Paris, France\".");
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      return;
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
 
     const trackingNumber = generateTrackingNumber();
     const now = todayIso();
@@ -143,10 +170,10 @@
       breed: breed || (species === "cat" ? "Domestic shorthair" : "Mixed breed"),
       age: age || "Unknown",
       photo,
-      origin: { name: originName, ...cityCoords[originName] },
-      destination: { name: destName, ...cityCoords[destName] },
+      origin: { name: originName, ...originCoords },
+      destination: { name: destName, ...destCoords },
       currentStageIndex: 0,
-      currentLocation: { name: originName, ...cityCoords[originName] },
+      currentLocation: { name: originName, ...originCoords },
       stageDates: { "Booked": now },
       events: [
         { date: now, location: originName, description: notes || "Shipment booked and confirmed." }
