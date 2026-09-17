@@ -72,17 +72,11 @@
         </label>
       </div>
 
-      <div class="field-row">
-        <label class="field">
-          <span>Origin</span>
-          <input type="text" id="newOrigin" placeholder="e.g. Houston, TX" required>
-        </label>
-        <label class="field">
-          <span>Destination</span>
-          <input type="text" id="newDestination" placeholder="e.g. Miami, FL" required>
-        </label>
-      </div>
-      <p class="form-section-note">Type any city — we'll look up its map location automatically when you create the shipment.</p>
+      <label class="field">
+        <span>Origin (Pickup Address)</span>
+        <input type="text" id="newOrigin" placeholder="e.g. 123 Main St, Houston, TX" required>
+      </label>
+      <p class="form-section-note">Your pickup location — a full address or just a city both work. The destination comes from the receiver's address below. Map positions are looked up automatically, and only a city-level location is ever shown on the public tracking page — never a full address.</p>
 
       <label class="field">
         <span>Photo (optional)</span>
@@ -106,6 +100,7 @@
         <span>Address</span>
         <input type="text" id="receiverAddress" required maxlength="150">
       </label>
+      <p class="form-section-note">This also sets the delivery destination on the map.</p>
 
       <div class="field-row">
         <label class="field">

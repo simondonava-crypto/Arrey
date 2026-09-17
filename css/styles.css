@@ -475,6 +475,36 @@ body {
 .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .admin-header h1 { margin: 0; font-size: 1.4rem; }
 
+.field { display: block; margin-bottom: 16px; }
+.field span { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--navy-light);
+  box-shadow: 0 0 0 3px rgba(31, 79, 163, 0.15);
+}
+.field textarea { resize: vertical; }
+
+.field-row { display: flex; gap: 16px; }
+.field-row .field { flex: 1; }
+
+@media (max-width: 560px) {
+  .field-row { flex-direction: column; gap: 0; }
+}
+
 .admin-form {
   background: var(--surface);
   border: 1px solid var(--border);

@@ -93,17 +93,39 @@
     });
   }
 
-  async function geocodeCity(name) {
-    const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + encodeURIComponent(name);
+  // Reduces a geocoded address down to a city-level label, since the public
+  // tracking page only ever shows city-level locations (see policies.html) —
+  // this applies to both the pickup address and the receiver's address.
+  function cityLevelLabel(addr) {
+    if (!addr) return "";
+    const city = addr.city || addr.town || addr.village || addr.hamlet || addr.municipality || addr.county;
+    const region = addr.state || addr.state_district || addr.region;
+    const country = addr.country;
+    if (city && region) return city + ", " + region;
+    if (city && country) return city + ", " + country;
+    if (region && country) return region + ", " + country;
+    return city || region || country || "";
+  }
+
+  async function geocodeAddress(query) {
+    const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&q=" + encodeURIComponent(query);
     const res = await fetch(url, { headers: { "Accept": "application/json" } });
     if (!res.ok) throw new Error("Geocoding request failed");
     const results = await res.json();
     if (!results.length) return null;
-    return { lat: parseFloat(results[0].lat), lng: parseFloat(results[0].lon) };
+    const r = results[0];
+    const label = cityLevelLabel(r.address);
+    if (!label) return null;
+    return { lat: parseFloat(r.lat), lng: parseFloat(r.lon), label };
   }
 
+  const ORIGIN_KEY = "pawtrack.lastOrigin";
   const createForm = document.getElementById("createShipmentForm");
   const resultPanel = document.getElementById("createResult");
+  const newOriginInput = document.getElementById("newOrigin");
+
+  const savedOrigin = localStorage.getItem(ORIGIN_KEY);
+  if (savedOrigin) newOriginInput.value = savedOrigin;
 
   createForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -112,8 +134,7 @@
     const species = document.getElementById("newSpecies").value;
     const breed = document.getElementById("newBreed").value.trim();
     const age = document.getElementById("newAge").value.trim();
-    const originName = document.getElementById("newOrigin").value.trim();
-    const destName = document.getElementById("newDestination").value.trim();
+    const originAddress = newOriginInput.value.trim();
     const notes = document.getElementById("newNotes").value.trim();
     const photoFile = document.getElementById("newPhoto").files[0];
 
@@ -125,11 +146,14 @@
       email: document.getElementById("receiverEmail").value.trim()
     };
 
-    if (!petName || !originName || !destName || originName.toLowerCase() === destName.toLowerCase()) {
-      alert("Please fill in the pet's name, and enter two different cities for origin and destination.");
+    if (!petName) {
+      alert("Please fill in the pet's name.");
       return;
     }
-
+    if (!originAddress) {
+      alert("Please fill in the origin / pickup address.");
+      return;
+    }
     if (!receiver.name || !receiver.address || !receiver.country || !receiver.phone || !receiver.email) {
       alert("Please fill in all of the receiver's information.");
       return;
@@ -138,11 +162,13 @@
     const submitBtn = createForm.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.textContent;
     submitBtn.disabled = true;
-    submitBtn.textContent = "Looking up cities...";
+    submitBtn.textContent = "Looking up addresses...";
 
-    let originCoords, destCoords;
+    const destinationQuery = receiver.address + ", " + receiver.country;
+
+    let originGeo, destGeo;
     try {
-      [originCoords, destCoords] = await Promise.all([geocodeCity(originName), geocodeCity(destName)]);
+      [originGeo, destGeo] = await Promise.all([geocodeAddress(originAddress), geocodeAddress(destinationQuery)]);
     } catch (err) {
       alert("Couldn't reach the map lookup service. Please check your connection and try again.");
       submitBtn.disabled = false;
@@ -150,8 +176,8 @@
       return;
     }
 
-    if (!originCoords || !destCoords) {
-      alert("Couldn't find one of those cities on the map. Try being more specific, e.g. \"Houston, TX\" or \"Paris, France\".");
+    if (!originGeo || !destGeo) {
+      alert("Couldn't find one of those addresses on the map. Try adding more detail, like a city and state/country.");
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText;
       return;
@@ -159,6 +185,15 @@
 
     submitBtn.disabled = false;
     submitBtn.textContent = originalBtnText;
+
+    // Free map lookups can occasionally match the wrong town for a full
+    // street address (ambiguous street names, incomplete map data) — a quick
+    // confirmation catches that before it's saved.
+    const confirmed = confirm(
+      "We found:\nOrigin: " + originGeo.label + "\nDestination: " + destGeo.label +
+      "\n\nCreate this shipment with these locations?"
+    );
+    if (!confirmed) return;
 
     const trackingNumber = generateTrackingNumber();
     const now = todayIso();
@@ -170,13 +205,14 @@
       breed: breed || (species === "cat" ? "Domestic shorthair" : "Mixed breed"),
       age: age || "Unknown",
       photo,
-      origin: { name: originName, ...originCoords },
-      destination: { name: destName, ...destCoords },
+      originAddress,
+      origin: { name: originGeo.label, lat: originGeo.lat, lng: originGeo.lng },
+      destination: { name: destGeo.label, lat: destGeo.lat, lng: destGeo.lng },
       currentStageIndex: 0,
-      currentLocation: { name: originName, ...originCoords },
+      currentLocation: { name: originGeo.label, lat: originGeo.lat, lng: originGeo.lng },
       stageDates: { "Booked": now },
       events: [
-        { date: now, location: originName, description: notes || "Shipment booked and confirmed." }
+        { date: now, location: originGeo.label, description: notes || "Shipment booked and confirmed." }
       ],
       receiver
     };
@@ -186,6 +222,9 @@
     saveAdminShipments(shipments);
 
     createForm.reset();
+    newOriginInput.value = originAddress;
+    localStorage.setItem(ORIGIN_KEY, originAddress);
+
     resultPanel.hidden = false;
     document.getElementById("resultTrackingNumber").textContent = trackingNumber;
     document.getElementById("resultTrackLink").href = "track.html?track=" + encodeURIComponent(trackingNumber);
@@ -230,6 +269,7 @@
           </div>
           ${s.receiver ? `
           <div class="admin-row-details" id="details-${trackingNumber}" hidden>
+            ${s.originAddress ? `<div><strong>Pickup Address:</strong> ${escapeHtml(s.originAddress)}</div>` : ""}
             <div><strong>Receiver:</strong> ${escapeHtml(s.receiver.name)}</div>
             <div><strong>Address:</strong> ${escapeHtml(s.receiver.address)}</div>
             <div><strong>Country:</strong> ${escapeHtml(s.receiver.country)}</div>
