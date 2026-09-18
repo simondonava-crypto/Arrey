@@ -1,28 +1,13 @@
 (function () {
   "use strict";
 
-  // ---------------------------------------------------------------
-  // DEMO-ONLY credentials. This is a static site with no backend or
-  // database, so there is no way to check a password securely here —
-  // anyone who views this file (or the GitHub repo) can read these
-  // values in plain text. This gate is for prototype/demo purposes
-  // only and must NOT be relied on to protect a real business.
-  // ---------------------------------------------------------------
-  const ADMIN_EMAIL = "admin@pawtrack.example";
-  const ADMIN_PASSWORD = "PawTrack2026!";
-
-  const SESSION_KEY = "pawtrack.adminSession";
-  const STORAGE_KEY = "pawtrack.adminShipments";
+  if (typeof supabaseClient === "undefined") return;
 
   const loginPanel = document.getElementById("loginPanel");
   const dashboardPanel = document.getElementById("dashboardPanel");
   const loginForm = document.getElementById("loginForm");
   const loginError = document.getElementById("loginError");
   const logoutBtn = document.getElementById("logoutBtn");
-
-  function isLoggedIn() {
-    return sessionStorage.getItem(SESSION_KEY) === "true";
-  }
 
   function showDashboard() {
     loginPanel.hidden = true;
@@ -35,49 +20,64 @@
     loginPanel.hidden = false;
   }
 
-  loginForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "true");
+
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Signing in...";
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+
+    if (error) {
+      loginError.textContent = error.message || "Incorrect email or password.";
+      loginError.hidden = false;
+    } else {
       loginError.hidden = true;
       showDashboard();
-    } else {
-      loginError.hidden = false;
     }
   });
 
-  logoutBtn.addEventListener("click", () => {
-    sessionStorage.removeItem(SESSION_KEY);
+  logoutBtn.addEventListener("click", async () => {
+    await supabaseClient.auth.signOut();
     showLogin();
   });
 
-  /* ---------- shipment storage ---------- */
-
-  function getAdminShipments() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-    } catch (e) {
-      return {};
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    if (session) {
+      showDashboard();
+    } else {
+      showLogin();
     }
-  }
+  });
 
-  function saveAdminShipments(shipments) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(shipments));
-  }
+  /* ---------- shipment mapping ---------- */
 
-  function generateTrackingNumber() {
-    const existing = new Set([
-      ...Object.keys(typeof SHIPMENTS !== "undefined" ? SHIPMENTS : {}),
-      ...Object.keys(getAdminShipments())
-    ]);
-    let candidate;
-    do {
-      const digits = Math.floor(10000000 + Math.random() * 89999999);
-      candidate = "PAW-" + digits;
-    } while (existing.has(candidate));
-    return candidate;
+  // Converts a database row (snake_case) into the shape the rest of this
+  // file and app.js work with (camelCase), matching the old localStorage format.
+  function fromRow(row) {
+    return {
+      trackingNumber: row.tracking_number,
+      petName: row.pet_name,
+      species: row.species,
+      breed: row.breed,
+      age: row.age,
+      photo: row.photo,
+      originAddress: row.origin_address,
+      origin: row.origin,
+      destination: row.destination,
+      currentStageIndex: row.current_stage_index,
+      currentLocation: row.current_location,
+      stageDates: row.stage_dates,
+      events: row.events,
+      receiver: row.receiver
+    };
   }
 
   function todayIso() {
@@ -117,6 +117,11 @@
     const label = cityLevelLabel(r.address);
     if (!label) return null;
     return { lat: parseFloat(r.lat), lng: parseFloat(r.lon), label };
+  }
+
+  function generateTrackingNumber() {
+    const digits = Math.floor(10000000 + Math.random() * 89999999);
+    return "PAW-" + digits;
   }
 
   const ORIGIN_KEY = "pawtrack.lastOrigin";
@@ -183,9 +188,6 @@
       return;
     }
 
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalBtnText;
-
     // Free map lookups can occasionally match the wrong town for a full
     // street address (ambiguous street names, incomplete map data) — a quick
     // confirmation catches that before it's saved.
@@ -193,33 +195,57 @@
       "We found:\nOrigin: " + originGeo.label + "\nDestination: " + destGeo.label +
       "\n\nCreate this shipment with these locations?"
     );
-    if (!confirmed) return;
+    if (!confirmed) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+      return;
+    }
 
-    const trackingNumber = generateTrackingNumber();
+    submitBtn.textContent = "Saving...";
+
     const now = todayIso();
     const photo = photoFile ? await readFileAsDataUrl(photoFile) : null;
 
-    const shipment = {
-      petName,
+    const row = {
+      pet_name: petName,
       species,
       breed: breed || (species === "cat" ? "Domestic shorthair" : "Mixed breed"),
       age: age || "Unknown",
       photo,
-      originAddress,
+      origin_address: originAddress,
       origin: { name: originGeo.label, lat: originGeo.lat, lng: originGeo.lng },
       destination: { name: destGeo.label, lat: destGeo.lat, lng: destGeo.lng },
-      currentStageIndex: 0,
-      currentLocation: { name: originGeo.label, lat: originGeo.lat, lng: originGeo.lng },
-      stageDates: { "Booked": now },
+      current_stage_index: 0,
+      current_location: { name: originGeo.label, lat: originGeo.lat, lng: originGeo.lng },
+      stage_dates: { "Booked": now },
       events: [
         { date: now, location: originGeo.label, description: notes || "Shipment booked and confirmed." }
       ],
       receiver
     };
 
-    const shipments = getAdminShipments();
-    shipments[trackingNumber] = shipment;
-    saveAdminShipments(shipments);
+    let trackingNumber;
+    let insertError;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      trackingNumber = generateTrackingNumber();
+      const { error } = await supabaseClient
+        .from("shipments")
+        .insert({ tracking_number: trackingNumber, ...row });
+      if (!error) {
+        insertError = null;
+        break;
+      }
+      insertError = error;
+      if (error.code !== "23505") break; // not a duplicate-key collision, stop retrying
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+
+    if (insertError) {
+      alert("Couldn't save the shipment: " + insertError.message);
+      return;
+    }
 
     createForm.reset();
     newOriginInput.value = originAddress;
@@ -235,21 +261,27 @@
 
   const STAGE_ORDER = ["Booked", "Picked Up", "In Transit", "Out for Delivery", "Delivered"];
 
-  function renderShipmentList() {
-    const shipments = getAdminShipments();
+  async function renderShipmentList() {
     const list = document.getElementById("shipmentList");
-    const entries = Object.entries(shipments).sort((a, b) => {
-      const da = Object.values(a[1].stageDates)[0] || "";
-      const db = Object.values(b[1].stageDates)[0] || "";
-      return db.localeCompare(da);
-    });
+    const { data, error } = await supabaseClient
+      .from("shipments")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-    if (entries.length === 0) {
+    if (error) {
+      list.innerHTML = '<p class="empty-state" style="padding:20px 0;">Couldn\'t load shipments: ' + escapeHtml(error.message) + '</p>';
+      return;
+    }
+
+    const shipments = (data || []).map(fromRow);
+
+    if (shipments.length === 0) {
       list.innerHTML = '<p class="empty-state" style="padding:20px 0;">No shipments created yet.</p>';
       return;
     }
 
-    list.innerHTML = entries.map(([trackingNumber, s]) => {
+    list.innerHTML = shipments.map((s) => {
+      const trackingNumber = s.trackingNumber;
       const status = STAGE_ORDER[s.currentStageIndex];
       const canAdvance = s.currentStageIndex < STAGE_ORDER.length - 1;
       return `
@@ -287,41 +319,44 @@
     return div.innerHTML;
   }
 
-  document.getElementById("shipmentList").addEventListener("click", (e) => {
+  document.getElementById("shipmentList").addEventListener("click", async (e) => {
     const advanceTN = e.target.getAttribute("data-advance");
     const deleteTN = e.target.getAttribute("data-delete");
     const detailsTN = e.target.getAttribute("data-details");
-    const shipments = getAdminShipments();
 
     if (detailsTN) {
       const panel = document.getElementById("details-" + detailsTN);
       if (panel) panel.hidden = !panel.hidden;
     }
 
-    if (advanceTN && shipments[advanceTN]) {
-      const s = shipments[advanceTN];
-      s.currentStageIndex += 1;
-      const stageName = STAGE_ORDER[s.currentStageIndex];
-      s.stageDates[stageName] = todayIso();
-      s.events.unshift({ date: todayIso(), location: s.destination.name, description: stageName + "." });
-      saveAdminShipments(shipments);
+    if (advanceTN) {
+      const { data, error } = await supabaseClient
+        .from("shipments")
+        .select("*")
+        .eq("tracking_number", advanceTN)
+        .single();
+      if (error || !data) return;
+
+      const s = fromRow(data);
+      const newIndex = s.currentStageIndex + 1;
+      const stageName = STAGE_ORDER[newIndex];
+      const now = todayIso();
+      const stageDates = { ...s.stageDates, [stageName]: now };
+      const events = [{ date: now, location: s.destination.name, description: stageName + "." }, ...s.events];
+
+      await supabaseClient
+        .from("shipments")
+        .update({ current_stage_index: newIndex, stage_dates: stageDates, events })
+        .eq("tracking_number", advanceTN);
+
       renderShipmentList();
     }
 
-    if (deleteTN && shipments[deleteTN]) {
+    if (deleteTN) {
       if (confirm("Delete this shipment? This cannot be undone.")) {
-        delete shipments[deleteTN];
-        saveAdminShipments(shipments);
+        await supabaseClient.from("shipments").delete().eq("tracking_number", deleteTN);
         renderShipmentList();
       }
     }
   });
-
-  /* ---------- init ---------- */
-
-  if (isLoggedIn()) {
-    showDashboard();
-  } else {
-    showLogin();
-  }
 })();

@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  if (typeof supabaseClient === "undefined") return;
+
   function formatDateTime(iso) {
     const d = new Date(iso);
     return d.toLocaleString(undefined, {
@@ -80,22 +82,48 @@
     `).join("");
   }
 
-  function getAdminShipments() {
-    try {
-      return JSON.parse(localStorage.getItem("pawtrack.adminShipments") || "{}");
-    } catch (e) {
-      return {};
-    }
+  function fromPublicRow(row) {
+    return {
+      petName: row.pet_name,
+      species: row.species,
+      breed: row.breed,
+      photo: row.photo,
+      origin: row.origin,
+      destination: row.destination,
+      currentStageIndex: row.current_stage_index,
+      currentLocation: row.current_location,
+      stageDates: row.stage_dates,
+      events: row.events
+    };
   }
 
-  function showShipment(trackingNumber) {
+  async function showShipment(trackingNumber) {
     const key = trackingNumber.trim().toUpperCase();
-    const shipment = SHIPMENTS[key] || getAdminShipments()[key];
-    if (!shipment) {
-      resultView.hidden = true;
+
+    resultView.hidden = true;
+    notFound.hidden = true;
+
+    const { data, error } = await supabaseClient
+      .from("shipments_public")
+      .select("*")
+      .eq("tracking_number", key)
+      .maybeSingle();
+
+    const notFoundText = notFound.querySelector("p");
+
+    if (error) {
       notFound.hidden = false;
+      notFoundText.textContent = "Something went wrong looking up that tracking number. Please try again.";
       return;
     }
+
+    if (!data) {
+      notFound.hidden = false;
+      notFoundText.textContent = "We couldn't find a shipment with that tracking number. Please double-check and try again.";
+      return;
+    }
+
+    const shipment = fromPublicRow(data);
     notFound.hidden = true;
     resultView.hidden = false;
 
