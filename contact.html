@@ -39,18 +39,25 @@
       <form id="contactForm" class="contact-form">
         <label class="field">
           <span>Name</span>
-          <input type="text" required maxlength="60">
+          <input type="text" id="contactName" required maxlength="60">
         </label>
         <label class="field">
           <span>Email</span>
-          <input type="email" required maxlength="80">
+          <input type="email" id="contactEmail" required maxlength="80">
         </label>
         <label class="field">
           <span>Message</span>
-          <textarea rows="4" required maxlength="600"></textarea>
+          <textarea id="contactMessage" rows="4" required maxlength="600"></textarea>
         </label>
         <button type="submit" class="btn btn-primary">Send message</button>
-        <p id="contactSent" class="contact-sent" hidden>Thanks — your message has been sent. We'll be in touch soon.</p>
+
+        <div id="contactChoice" class="contact-choice" hidden>
+          <p>How would you like to reach us?</p>
+          <div class="contact-choice-actions">
+            <a id="contactEmailBtn" href="#" class="btn btn-primary btn-small">Send Email</a>
+            <a id="contactCallBtn" href="#" class="btn btn-outline-light btn-small">Call Us</a>
+          </div>
+        </div>
       </form>
 
       <div class="contact-info">
@@ -113,8 +120,21 @@
 <script>
   document.getElementById("contactForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    document.getElementById("contactSent").hidden = false;
-    this.reset();
+
+    var name = document.getElementById("contactName").value.trim();
+    var email = document.getElementById("contactEmail").value.trim();
+    var message = document.getElementById("contactMessage").value.trim();
+
+    var subject = "Message from " + name + " via PawTrack";
+    var body = message + "\n\nFrom: " + name + " (" + email + ")";
+
+    document.getElementById("contactEmailBtn").href =
+      "mailto:support@pawtrack.example?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    document.getElementById("contactCallBtn").href = "tel:+15551234567";
+
+    var choice = document.getElementById("contactChoice");
+    choice.hidden = false;
+    choice.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 </script>
 </body>

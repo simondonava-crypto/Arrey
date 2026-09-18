@@ -697,7 +697,9 @@ body {
   font-size: 0.92rem;
 }
 .contact-form input::placeholder, .contact-form textarea::placeholder { color: rgba(255,255,255,0.6); }
-.contact-sent { margin-top: 12px; color: #bff0d6; font-weight: 600; font-size: 0.9rem; }
+.contact-choice { margin-top: 16px; }
+.contact-choice p { margin: 0 0 10px; font-weight: 600; }
+.contact-choice-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .contact-info {
   display: flex;
