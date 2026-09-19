@@ -2,8 +2,8 @@
 // The anon/public key is meant to be exposed client-side like this - it's
 // safe because the row-level security policies in supabase-setup.sql are
 // what actually control who can read or write what, not secrecy of this key.
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://rkmhknnchlghgmcvlywq.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrbWhrbm5jaGxnaGdtY3ZseXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3OTg5MjEsImV4cCI6MjEwNTM3NDkyMX0.nmyRvgo33RcKtfIieosJJvbKvx544GWf9feo_FcdC8Q";
 
 let supabaseClient;
 try {
