@@ -1,4 +1,4 @@
--- PawTrack shipments schema with real staff login security.
+-- Pacific Petcare Airways shipments schema with real staff login security.
 -- Run in Supabase: SQL Editor -> New query -> paste all -> Run.
 -- Safe to re-run: uses "if not exists" / "or replace" throughout.
 

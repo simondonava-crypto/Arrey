@@ -121,10 +121,10 @@
 
   function generateTrackingNumber() {
     const digits = Math.floor(10000000 + Math.random() * 89999999);
-    return "PAW-" + digits;
+    return "PPA-" + digits;
   }
 
-  const ORIGIN_KEY = "pawtrack.lastOrigin";
+  const ORIGIN_KEY = "pacificpetcareairways.lastOrigin";
   const createForm = document.getElementById("createShipmentForm");
   const resultPanel = document.getElementById("createResult");
   const newOriginInput = document.getElementById("newOrigin");
