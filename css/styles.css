@@ -160,7 +160,7 @@ body {
 
 @media (max-width: 600px) {
   .hero { min-height: 0; padding: 48px 20px 40px; }
-  .hero-bg-photo { object-position: center 38%; }
+  .hero-bg-photo { object-fit: contain; object-position: top center; background: var(--navy); }
 }
 
 @media (max-width: 560px) {
